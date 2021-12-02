@@ -67,6 +67,7 @@ func day1() {
 		panic(err)
 	}
 
+	fmt.Println("Day 1 *******************")
 	fmt.Println(countIncreases(input))
 	fmt.Println(countSlidingWindow(input, 3))
 }
