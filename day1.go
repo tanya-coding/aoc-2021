@@ -1,35 +1,9 @@
 package main
 
 import (
-	"bufio"
 	"fmt"
-	"os"
 	"strconv"
 )
-
-func readInput(path string) ([]int, error) {
-	file, err := os.Open(path)
-	if err != nil {
-		return nil, err
-	}
-	defer file.Close()
-
-	input := []int{}
-	scanner := bufio.NewScanner(file)
-	for scanner.Scan() {
-		intVar, err := strconv.Atoi(scanner.Text())
-		if err != nil {
-			return nil, err
-		}
-		input = append(input, intVar)
-	}
-
-	if err := scanner.Err(); err != nil {
-		return nil, err
-	}
-
-	return input, nil
-}
 
 func countIncreases(input []int) int {
 	increased := 0
@@ -63,8 +37,32 @@ func countSlidingWindow(input []int, size int) int {
 	return increased
 }
 
+func parseDay1(input []string) ([]int, error) {
+	parsed := []int{}
+	for _, line := range input {
+		intVar, err := strconv.Atoi(line)
+		if err != nil {
+			return nil, err
+		}
+		parsed = append(parsed, intVar)
+	}
+	return parsed, nil
+}
+
+func slurpDay1(path string) ([]int, error) {
+	input, err := slurp("day1.txt")
+	if err != nil {
+		return nil, err
+	}
+	parsed, err := parseDay1(input)
+	if err != nil {
+		return nil, err
+	}
+	return parsed, nil
+}
+
 func day1() {
-	input, err := readInput("/Users/tanya/Downloads/aoc-day1.txt")
+	input, err := slurpDay1("day1.txt")
 	if err != nil {
 		panic(err)
 	}
