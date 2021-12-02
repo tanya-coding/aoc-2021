@@ -16,6 +16,12 @@ type Location struct {
 	position int
 }
 
+type Location2 struct {
+	depth    int
+	position int
+	aim      int
+}
+
 func parseDay2(input []string) ([]Instruction, error) {
 	parsed := []Instruction{}
 	for _, line := range input {
@@ -61,6 +67,27 @@ func getLocation(instructions []Instruction) int {
 	return location.depth * location.position
 }
 
+func advance2(location Location2, instruction Instruction) Location2 {
+	switch instruction.direction {
+	case "down":
+		location.aim += instruction.unit
+	case "up":
+		location.aim -= instruction.unit
+	case "forward":
+		location.position += instruction.unit
+		location.depth += location.aim * instruction.unit
+	}
+	return location
+}
+
+func getLocation2(instructions []Instruction) int {
+	location := Location2{}
+	for _, i := range instructions {
+		location = advance2(location, i)
+	}
+	return location.depth * location.position
+}
+
 func day2() {
 	fmt.Println("\nDay 2 *******************")
 	instructions, err := slurpDay2("day2.txt")
@@ -68,4 +95,5 @@ func day2() {
 		panic(err)
 	}
 	fmt.Println(getLocation(instructions))
+	fmt.Println(getLocation2(instructions))
 }
