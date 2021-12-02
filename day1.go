@@ -43,25 +43,30 @@ func countIncreases(input []int) int {
 
 func countSlidingWindow(input []int, size int) int {
 	l := len(input)
+	numWindows := l - l%size
 
-	sums := make([]int, l)
-	for i := 0; i < l; i++ {
+	sums := make([]int, numWindows)
+	increased := 0
+	for i := 0; i < numWindows; i++ {
 		sums[i] = 0
-		if i+size <= l {
-			for j := 0; j < size; j++ {
-				sums[i] = sums[i] + input[i+j]
-			}
+		// Calculate sliding window (looking forward)
+		for j := 0; j < size; j++ {
+			sums[i] = sums[i] + input[i+j]
+		}
+		// Check if new sum is an increase
+		if i > 0 && sums[i] > sums[i-1] {
+			increased++
 		}
 	}
-	return countIncreases(sums)
+	return increased
 }
 
 func day1() {
-	inputPath := "/Users/tanya/Downloads/aoc-day1-1.txt"
-	input, err := readInput(inputPath)
+	input, err := readInput("/Users/tanya/Downloads/aoc-day1.txt")
 	if err != nil {
 		panic(err)
 	}
+
 	fmt.Println(countIncreases(input))
 	fmt.Println(countSlidingWindow(input, 3))
 }
