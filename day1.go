@@ -42,11 +42,10 @@ func countIncreases(input []int) int {
 }
 
 func countSlidingWindow(input []int, size int) int {
-	l := len(input)
 	currentWindow := 0
 	increased := 0
 
-	for i:=0 ; i < l; i ++ {
+	for i := 0; i < len(input); i++ {
 		if i < size {
 			// not yet a complete window
 			currentWindow += input[i]
@@ -55,9 +54,9 @@ func countSlidingWindow(input []int, size int) int {
 
 		lastWindow := currentWindow
 		// remove trailing element and add current element to maintain window
-		currentWindow += input[i] - input[i - size]
+		currentWindow += input[i] - input[i-size]
 		if currentWindow > lastWindow {
-			increased ++
+			increased++
 		}
 	}
 
@@ -65,7 +64,7 @@ func countSlidingWindow(input []int, size int) int {
 }
 
 func day1() {
-	input, err := readInput("aoc-day-1.txt")
+	input, err := readInput("/Users/tanya/Downloads/aoc-day1.txt")
 	if err != nil {
 		panic(err)
 	}
