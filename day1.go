@@ -50,7 +50,7 @@ func parseDay1(input []string) ([]int, error) {
 }
 
 func slurpDay1(path string) ([]int, error) {
-	input, err := slurp("day1.txt")
+	input, err := slurp(path)
 	if err != nil {
 		return nil, err
 	}
