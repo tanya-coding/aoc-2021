@@ -54,11 +54,7 @@ func slurpDay1(path string) ([]int, error) {
 	if err != nil {
 		return nil, err
 	}
-	parsed, err := parseDay1(input)
-	if err != nil {
-		return nil, err
-	}
-	return parsed, nil
+	return parseDay1(input)
 }
 
 func day1() {

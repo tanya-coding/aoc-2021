@@ -40,11 +40,7 @@ func slurpDay2(path string) ([]Instruction, error) {
 	if err != nil {
 		return nil, err
 	}
-	parsed, err := parseDay2(input)
-	if err != nil {
-		return nil, err
-	}
-	return parsed, nil
+	return parseDay2(input)
 }
 
 func advance(location Location, instruction Instruction) Location {
