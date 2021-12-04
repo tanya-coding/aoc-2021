@@ -8,12 +8,12 @@ import (
 // Returns
 //   1st: slice where each element is a rune slice, e.g. ['0', '1', '1', '0']
 //   2nd: error
-func slurpDay3(path string) ([]([]rune), error) {
+func slurpDay3(path string) ([][]rune, error) {
 	input, err := slurp(path)
 	if err != nil {
 		return nil, err
 	}
-	codes := make([]([]rune), len(input))
+	codes := make([][]rune, len(input))
 	for i, line := range input {
 		codes[i] = []rune(line)
 	}
@@ -23,9 +23,9 @@ func slurpDay3(path string) ([]([]rune), error) {
 // Counts frequencies of each bit in the list at its position
 // Returns an array where item represents frequency of '0' and '1' at that position:
 // e.g. [{'0': 123, '1': 876}, {'0': 654, '1': 233}, {'0': 34, '1': 98}, ...}
-func countFrequencies(codes []([]rune)) [](map[rune]int) {
+func countFrequencies(codes [][]rune) []map[rune]int {
 	// We will assumes all codes are the same length
-	frequencies := make([](map[rune]int), len(codes[0]))
+	frequencies := make([]map[rune]int, len(codes[0]))
 	for _, code := range codes {
 		for pos, bit := range code {
 			if frequencies[pos] == nil {
@@ -37,7 +37,7 @@ func countFrequencies(codes []([]rune)) [](map[rune]int) {
 	return frequencies
 }
 
-func powerConsumption(freq [](map[rune]int)) int64 {
+func powerConsumption(freq []map[rune]int) int64 {
 	codeLen := len(freq)
 	gr := make([]rune, codeLen)
 	for i, f := range freq {
@@ -53,7 +53,7 @@ func powerConsumption(freq [](map[rune]int)) int64 {
 	return gamma * epsilon
 }
 
-func OxGenBitCriteria(freq [](map[rune]int), pos int) rune {
+func OxGenBitCriteria(freq []map[rune]int, pos int) rune {
 	if freq[pos]['1'] >= freq[pos]['0'] {
 		return '1'
 	}
@@ -89,7 +89,7 @@ func dbg(codes [][]rune) {
 }
 
 func MatchingCode(bitCriteria BitCriteria, freq []map[rune]int, codes [][]rune, pos int) []rune {
-	fmt.Println("Processing pos", pos, "Bit criteria: ", string(bitCriteria(freq, pos)), "Frequencies:", freq[pos])
+	// fmt.Println("Processing pos", pos, "Bit criteria: ", string(bitCriteria(freq, pos)), "Frequencies:", freq[pos])
 	matches := Filter(bitCriteria, freq, pos)
 	remaining := [][]rune{}
 	for _, code := range codes {
@@ -97,7 +97,7 @@ func MatchingCode(bitCriteria BitCriteria, freq []map[rune]int, codes [][]rune, 
 			remaining = append(remaining, code)
 		}
 	}
-	dbg(remaining)
+	// dbg(remaining)
 	if len(remaining) == 0 {
 		panic("Oops, didn't find a match")
 	}
