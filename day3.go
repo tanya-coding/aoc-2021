@@ -40,8 +40,8 @@ func countFrequencies(codes []([]rune)) [](map[rune]int) {
 func powerConsumption(freq [](map[rune]int)) int64 {
 	codeLen := len(freq)
 	gr := make([]rune, codeLen)
-	for i := 0; i < codeLen; i++ {
-		if freq[i]['0'] > freq[i]['1'] {
+	for i, f := range freq {
+		if f['0'] > f['1'] {
 			gr[i] = '0'
 		} else {
 			gr[i] = '1'
