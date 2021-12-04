@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"math"
 	"strconv"
 )
 
@@ -48,7 +47,7 @@ func powerConsumption(freq map[int](map[rune]int)) int64 {
 		}
 	}
 	gamma, _ := strconv.ParseInt(string(gr), 2, 64) // Ignoring error since we control the input
-	mask := math.Pow(2, float64(maxLen)) - 1
+	mask := 1<<maxLen - 1                           // Get mask of all 1s of maxLength: e.g. for maxLenth 3: 111
 	epsilon := gamma ^ int64(mask)
 	return gamma * epsilon
 }
