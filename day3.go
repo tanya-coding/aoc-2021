@@ -21,7 +21,7 @@ func slurpDay3(path string) ([]([]rune), error) {
 }
 
 // Counts frequencies of each bit in the list at its position
-// Returns an array where each item is a map in shape {'0': zero-frequency, '1': one-frequency}
+// Returns an array where item represents frequency of '0' and '1' at that position:
 // e.g. [{'0': 123, '1': 876}, {'0': 654, '1': 233}, {'0': 34, '1': 98}, ...}
 func countFrequencies(codes []([]rune)) [](map[rune]int) {
 	// We will assumes all codes are the same length
