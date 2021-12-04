@@ -86,7 +86,7 @@ func getLocation2(instructions []Instruction) int {
 
 func day2() {
 	fmt.Println("\nDay 2 *******************")
-	instructions, err := slurpDay2("day2.txt")
+	instructions, err := slurpDay2("input/day2.txt")
 	if err != nil {
 		panic(err)
 	}

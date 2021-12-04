@@ -58,7 +58,7 @@ func slurpDay1(path string) ([]int, error) {
 }
 
 func day1() {
-	input, err := slurpDay1("day1.txt")
+	input, err := slurpDay1("input/day1.txt")
 	if err != nil {
 		panic(err)
 	}
