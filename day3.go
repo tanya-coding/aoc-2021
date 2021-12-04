@@ -21,22 +21,23 @@ func slurpDay3(path string) ([]([]rune), error) {
 }
 
 // Counts frequencies of each bit in the list at its position
-// Returns a map in shape {position: {'0': zero-frequency, '1': one-frequency}}
-// e.g. {0: {'0': 123, '1': 876}, 1: {'0': 654, '1': 233}, 2: {'0': 34, '1': 98}, ...}
-func countFrequencies(codes []([]rune)) map[int](map[rune]int) {
-	frequencies := map[int](map[rune]int){}
+// Returns an array where each item is a map in shape {'0': zero-frequency, '1': one-frequency}
+// e.g. [{'0': 123, '1': 876}, {'0': 654, '1': 233}, {'0': 34, '1': 98}, ...}
+func countFrequencies(codes []([]rune)) [](map[rune]int) {
+	// We will assumes all codes are the same length
+	frequencies := make([](map[rune]int), len(codes[0]))
 	for _, code := range codes {
 		for pos, bit := range code {
 			if frequencies[pos] == nil {
 				frequencies[pos] = map[rune]int{}
 			}
-			frequencies[pos][bit] += 1
+			frequencies[pos][bit]++
 		}
 	}
 	return frequencies
 }
 
-func powerConsumption(freq map[int](map[rune]int)) int64 {
+func powerConsumption(freq [](map[rune]int)) int64 {
 	codeLen := len(freq)
 	gr := make([]rune, codeLen)
 	for i := 0; i < codeLen; i++ {
