@@ -53,6 +53,72 @@ func powerConsumption(freq [](map[rune]int)) int64 {
 	return gamma * epsilon
 }
 
+func OxGenBitCriteria(freq [](map[rune]int), pos int) rune {
+	if freq[pos]['1'] >= freq[pos]['0'] {
+		return '1'
+	}
+	return '0'
+}
+
+func CO2ScrubBitCriteria(freq []map[rune]int, pos int) rune {
+	if freq[pos]['0'] <= freq[pos]['1'] {
+		return '0'
+	}
+	return '1'
+}
+
+type RuneFilter func([]rune) bool
+
+type BitCriteria func([]map[rune]int, int) rune
+
+func Filter(bitCriteria BitCriteria, freq []map[rune]int, pos int) RuneFilter {
+	criteria := bitCriteria(freq, pos)
+	return func(code []rune) bool {
+		return criteria == code[pos]
+	}
+}
+
+func dbg(codes [][]rune) {
+	fmt.Println("Remaining", len(codes))
+	for i := 0; i < 5; i++ {
+		if i < len(codes) {
+			fmt.Println(string(codes[i]))
+		}
+	}
+	fmt.Println("...")
+}
+
+func MatchingCode(bitCriteria BitCriteria, freq []map[rune]int, codes [][]rune, pos int) []rune {
+	fmt.Println("Processing pos", pos, "Bit criteria: ", string(bitCriteria(freq, pos)), "Frequencies:", freq[pos])
+	matches := Filter(bitCriteria, freq, pos)
+	remaining := [][]rune{}
+	for _, code := range codes {
+		if matches(code) {
+			remaining = append(remaining, code)
+		}
+	}
+	dbg(remaining)
+	if len(remaining) == 0 {
+		panic("Oops, didn't find a match")
+	}
+	if len(remaining) == 1 {
+		return remaining[0]
+	}
+	return MatchingCode(bitCriteria, countFrequencies(remaining), remaining, pos+1)
+}
+
+func oxGenRating(codes [][]rune, freq []map[rune]int) int64 {
+	code := MatchingCode(OxGenBitCriteria, freq, codes, 0)
+	rating, _ := strconv.ParseInt(string(code), 2, 64)
+	return rating
+}
+
+func co2ScrubRating(codes [][]rune, freq []map[rune]int) int64 {
+	code := MatchingCode(CO2ScrubBitCriteria, freq, codes, 0)
+	rating, _ := strconv.ParseInt(string(code), 2, 64)
+	return rating
+}
+
 func day3() {
 	fmt.Println("\nDay 3 *******************")
 	codes, err := slurpDay3("input/day3.txt")
@@ -61,4 +127,5 @@ func day3() {
 	}
 	freq := countFrequencies(codes)
 	fmt.Println(powerConsumption(freq))
+	fmt.Println(oxGenRating(codes, freq) * co2ScrubRating(codes, freq))
 }
