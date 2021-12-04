@@ -47,17 +47,20 @@ func slurpDay3(path string) (int, []([]rune), error) {
 func countFrequencies(codes []([]rune), maxLen int) map[int](map[rune]int) {
 	frequencies := map[int](map[rune]int){}
 	for _, code := range codes {
+		// In sample input all items are the same length but if they weren't
+		// this would take care of starting at the right position
+		offset := maxLen - len(code)
 		for pos, bit := range code {
-			if frequencies[pos] == nil {
-				frequencies[pos] = map[rune]int{}
+			if frequencies[offset+pos] == nil {
+				frequencies[offset+pos] = map[rune]int{}
 			}
-			frequencies[pos][bit] += 1
+			frequencies[offset+pos][bit] += 1
 		}
 	}
 	return frequencies
 }
 
-func gamma(freq map[int](map[rune]int), maxLen int) int64 {
+func powerConsumption(freq map[int](map[rune]int), maxLen int) int64 {
 	gr := make([]rune, maxLen)
 	for i := 0; i < maxLen; i++ {
 		if freq[i]['0'] > freq[i]['1'] {
@@ -66,11 +69,10 @@ func gamma(freq map[int](map[rune]int), maxLen int) int64 {
 			gr[i] = '1'
 		}
 	}
-	gs := string(gr)
-	g, _ := strconv.ParseInt(gs, 2, 64)
+	gamma, _ := strconv.ParseInt(string(gr), 2, 64) // Ignoring error since we control the input
 	mask := math.Pow(2, float64(maxLen)) - 1
-	e := g ^ int64(mask)
-	return g * e
+	epsilon := gamma ^ int64(mask)
+	return gamma * epsilon
 }
 
 func day3() {
@@ -79,9 +81,6 @@ func day3() {
 	if err != nil {
 		panic(err)
 	}
-	// fmt.Println(codes, maxLen)
 	freq := countFrequencies(codes, maxLen)
-
-	// fmt.Println(freq)
-	fmt.Println(gamma(freq, maxLen))
+	fmt.Println(powerConsumption(freq, maxLen))
 }
