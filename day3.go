@@ -37,9 +37,9 @@ func countFrequencies(codes []([]rune)) map[int](map[rune]int) {
 }
 
 func powerConsumption(freq map[int](map[rune]int)) int64 {
-	maxLen := len(freq)
-	gr := make([]rune, maxLen)
-	for i := 0; i < len(freq); i++ {
+	codeLen := len(freq)
+	gr := make([]rune, codeLen)
+	for i := 0; i < codeLen; i++ {
 		if freq[i]['0'] > freq[i]['1'] {
 			gr[i] = '0'
 		} else {
@@ -47,8 +47,8 @@ func powerConsumption(freq map[int](map[rune]int)) int64 {
 		}
 	}
 	gamma, _ := strconv.ParseInt(string(gr), 2, 64) // Ignoring error since we control the input
-	mask := 1<<maxLen - 1                           // Get mask of all 1s of maxLength: e.g. for maxLenth 3: 111
-	epsilon := gamma ^ int64(mask)                  // Bitwise XOR gives us epsilon
+	mask := int64(1)<<codeLen - 1                   // Get mask of all 1s of maxLength: e.g. for maxLength 3: 111
+	epsilon := gamma ^ mask                         // Bitwise XOR gives us epsilon
 	return gamma * epsilon
 }
 
