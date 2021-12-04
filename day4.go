@@ -42,6 +42,12 @@ func mark(board *Board, num int) bool {
 	return false
 }
 
+func resetBoard(board *Board) {
+	board.marked = map[[2]int]bool{}
+	board.markedX = map[int]int{}
+	board.markedY = map[int]int{}
+}
+
 func sumUnmarked(board Board) int {
 	sum := 0
 	for num, coord := range board.items {
@@ -83,7 +89,7 @@ func slurpDay4(path string) ([]int, []*Board, error) {
 	return numbers, boards, nil
 }
 
-func draw(numbers []int, boards []*Board) int {
+func drawFirstWins(numbers []int, boards []*Board) int {
 	for _, num := range numbers {
 		for _, board := range boards {
 			if mark(board, num) {
@@ -96,11 +102,40 @@ func draw(numbers []int, boards []*Board) int {
 	return 0
 }
 
+func drawLastWins(numbers []int, boards []*Board) int {
+	wins := map[int]bool{}
+	var winningBoard Board
+	winningNum := 0
+	for _, num := range numbers {
+		for bi, board := range boards {
+			if mark(board, num) {
+				if !wins[bi] {
+					winningBoard = *board
+					winningNum = num
+					wins[bi] = true
+					resetBoard(board)
+				}
+			}
+		}
+	}
+	fmt.Println("Bingo. Number", winningNum)
+	prn(winningBoard)
+	return sumUnmarked(winningBoard) * winningNum
+}
+
+func resetBoards(boards []*Board) {
+	for _, b := range boards {
+		resetBoard(b)
+	}
+}
+
 func day4() {
 	fmt.Println("\nDay 4 *******************")
 	numbers, boards, err := slurpDay4("input/day4.txt")
 	if err != nil {
 		panic(err)
 	}
-	fmt.Println(draw(numbers, boards))
+	fmt.Println(drawFirstWins(numbers, boards))
+	resetBoards(boards)
+	fmt.Println(drawLastWins(numbers, boards))
 }
