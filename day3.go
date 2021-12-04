@@ -6,44 +6,28 @@ import (
 	"strconv"
 )
 
-//func parseDay3(string)
-
-// func slurpDay3(path string) (int, []int64, error) {
-// 	input, err := slurp(path)
-// 	if err != nil {
-// 		return 0, nil, err
-// 	}
-// 	codes := make([]int64, len(input))
-// 	max := 0
-// 	for i, line := range input {
-// 		if len(line) > max {
-// 			max = len(line)
-// 		}
-// 		if num, err := strconv.ParseInt(line, 2, 64); err != nil {
-// 			return 0, nil, err
-// 		} else {
-// 			codes[i] = num
-// 		}
-// 	}
-// 	return max, codes, nil
-// }
-
+// Returns
+//   1st: maximum code length
+//   2nd: slice where each element is a rune slice, e.g. ['0', '1', '1', '0']
 func slurpDay3(path string) (int, []([]rune), error) {
 	input, err := slurp(path)
 	if err != nil {
 		return 0, nil, err
 	}
 	codes := make([]([]rune), len(input))
-	max := 0
+	maxLen := 0
 	for i, line := range input {
-		if len(line) > max {
-			max = len(line)
+		if len(line) > maxLen {
+			maxLen = len(line)
 		}
 		codes[i] = []rune(line)
 	}
-	return max, codes, nil
+	return maxLen, codes, nil
 }
 
+// Counts frequencies of each bit in the list at its position
+// Returns a map in shape {position: {'0': zero-frequency, '1': one-frequency}}
+// e.g. {0: {'0': 123, '1': 876}, 1: {'0': 654, '1': 233}, 2: {'0': 34, '1': 98}, ...}
 func countFrequencies(codes []([]rune), maxLen int) map[int](map[rune]int) {
 	frequencies := map[int](map[rune]int){}
 	for _, code := range codes {
