@@ -24,10 +24,10 @@ type Board struct {
 }
 
 func prn(board Board) {
-	fmt.Println("items", board.items)
-	fmt.Println("marked", board.marked)
-	fmt.Println("markedX", board.markedX)
-	fmt.Println("markedY", board.markedY)
+	fmt.Println("items\t", board.items)
+	fmt.Println("marked\t", board.marked)
+	fmt.Println("markedX\t", board.markedX)
+	fmt.Println("markedY\t", board.markedY)
 }
 
 func mark(board *Board, num int) bool {
@@ -108,13 +108,11 @@ func drawLastWins(numbers []int, boards []*Board) int {
 	winningNum := 0
 	for _, num := range numbers {
 		for bi, board := range boards {
-			if mark(board, num) {
-				if !wins[bi] {
-					winningBoard = *board
-					winningNum = num
-					wins[bi] = true
-					resetBoard(board)
-				}
+			if mark(board, num) && !wins[bi] {
+				winningBoard = *board
+				winningNum = num
+				wins[bi] = true
+				resetBoard(board)
 			}
 		}
 	}
