@@ -89,5 +89,13 @@ func day5() {
 		panic(err)
 	}
 	// fmt.Println(floorMap.ventMap)
+	// We can walk coordinates instead of using precalculated value:
+	// d := 0
+	// for _, danger := range floorMap.ventMap {
+	// 	if danger >= 2 {
+	// 		d++
+	// 	}
+	// }
+	// fmt.Println(d)
 	fmt.Println(floorMap.danger)
 }
