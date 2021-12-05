@@ -26,11 +26,9 @@ func (floorMap FloorMap) countDanger() int {
 	return floorMap.danger
 }
 
-// Parse line instruction into list of coordinates that represent
-// a horizontal or vertical line
-// args:
-//	ls - line string in format x1,y1 -> x2,y2, e.g. 309,347 -> 309,464
-func strToLine(ls string) [][2]int {
+// Parse line instruction in format 'x1,y1 -> x2,y2' and
+// return (x1, y1, x2, y2)
+func parseCoordinates(ls string) (int, int, int, int) {
 	parts := strings.Fields(ls)
 	coord1 := strings.Split(parts[0], ",")
 	coord2 := strings.Split(parts[2], ",")
@@ -38,6 +36,18 @@ func strToLine(ls string) [][2]int {
 	y1, _ := strconv.Atoi(coord1[1])
 	x2, _ := strconv.Atoi(coord2[0])
 	y2, _ := strconv.Atoi(coord2[1])
+
+	return x1, y1, x2, y2
+}
+
+// Parse line instruction into list of coordinates
+// that represents a line
+// args:
+//	ls - line string in format 'x1,y1 -> x2,y2', e.g. 309,347 -> 309,464
+// returns:
+// 	line points: [[x1, y1], [xn, yn], ... [x2, y2] ]
+func strToLine(ls string) [][2]int {
+	x1, y1, x2, y2 := parseCoordinates(ls)
 	line := [][2]int{}
 	xDir := 0
 	if x1 > x2 {
