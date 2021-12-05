@@ -108,11 +108,11 @@ func drawLastWins(numbers []int, boards []*Board) int {
 	winningNum := 0
 	for _, num := range numbers {
 		for bi, board := range boards {
-			if mark(board, num) && !wins[bi] {
+			// Skip previous winners
+			if !wins[bi] && mark(board, num) {
 				winningBoard = *board
 				winningNum = num
 				wins[bi] = true
-				resetBoard(board)
 			}
 		}
 	}
