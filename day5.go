@@ -14,21 +14,14 @@ type FloorMap struct {
 func (floorMap *FloorMap) addVent(line [][2]int) {
 	for _, coord := range line {
 		floorMap.ventMap[coord]++
-		// if floorMap.ventMap[coord] == 2 {
-		// 	floorMap.danger++
-		// }
+		if floorMap.ventMap[coord] == 2 {
+			floorMap.danger++
+		}
 	}
 }
 
 func (floorMap FloorMap) countDanger() int {
-	d := 0
-	for _, danger := range floorMap.ventMap {
-		if danger >= 2 {
-			d++
-		}
-	}
-	return d
-	// return floorMap.danger
+	return floorMap.danger
 }
 
 // Parse line instruction into list of coordinates that represent
