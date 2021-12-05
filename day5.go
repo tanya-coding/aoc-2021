@@ -22,10 +22,6 @@ func (floorMap *FloorMap) addVent(line [][2]int) {
 	// fmt.Println("Map:", floorMap.ventMap)
 }
 
-func (floorMap FloorMap) countDanger() int {
-	return floorMap.danger
-}
-
 // Parse line instruction in format 'x1,y1 -> x2,y2' and
 // return (x1, y1, x2, y2)
 func parseCoordinates(ls string) (int, int, int, int) {
@@ -93,5 +89,5 @@ func day5() {
 		panic(err)
 	}
 	// fmt.Println(floorMap.ventMap)
-	fmt.Println(floorMap.countDanger())
+	fmt.Println(floorMap.danger)
 }
