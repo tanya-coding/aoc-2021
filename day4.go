@@ -35,17 +35,11 @@ func mark(board *Board, num int) bool {
 		board.marked[coord] = true
 		x := coord[0]
 		y := coord[1]
-		board.markedX[x]++
-		board.markedY[y]++
-		return board.markedX[x] == 5 || board.markedY[y] == 5
+		board.markedX[x]++                                    // Keep track number of filled items per column
+		board.markedY[y]++                                    // Keep track number of filled items per row
+		return board.markedX[x] == 5 || board.markedY[y] == 5 // Did this board just win?
 	}
 	return false
-}
-
-func resetBoard(board *Board) {
-	board.marked = map[[2]int]bool{}
-	board.markedX = map[int]int{}
-	board.markedY = map[int]int{}
 }
 
 func sumUnmarked(board Board) int {
@@ -93,8 +87,8 @@ func drawFirstWins(numbers []int, boards []*Board) int {
 	for _, num := range numbers {
 		for _, board := range boards {
 			if mark(board, num) {
-				fmt.Println("Bingo. Number", num)
-				prn(*board)
+				// fmt.Println("Bingo. Number", num)
+				// prn(*board)
 				return sumUnmarked(*board) * num
 			}
 		}
@@ -116,9 +110,15 @@ func drawLastWins(numbers []int, boards []*Board) int {
 			}
 		}
 	}
-	fmt.Println("Bingo. Number", winningNum)
-	prn(winningBoard)
+	// fmt.Println("Bingo. Number", winningNum)
+	// prn(winningBoard)
 	return sumUnmarked(winningBoard) * winningNum
+}
+
+func resetBoard(board *Board) {
+	board.marked = map[[2]int]bool{}
+	board.markedX = map[int]int{}
+	board.markedY = map[int]int{}
 }
 
 func resetBoards(boards []*Board) {
