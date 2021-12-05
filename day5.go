@@ -18,6 +18,8 @@ func (floorMap *FloorMap) addVent(line [][2]int) {
 			floorMap.danger++
 		}
 	}
+	// fmt.Println("Added vent:", line)
+	// fmt.Println("Map:", floorMap.ventMap)
 }
 
 func (floorMap FloorMap) countDanger() int {
@@ -37,26 +39,28 @@ func strToLine(ls string) [][2]int {
 	x2, _ := strconv.Atoi(coord2[0])
 	y2, _ := strconv.Atoi(coord2[1])
 	line := [][2]int{}
-	// Normalize lines (from smaller x1,y1 to larger x2,y2) since direction doesn't matter
+	xDir := 0
 	if x1 > x2 {
-		tmp := x1
-		x1 = x2
-		x2 = tmp
+		xDir = -1
+	} else if x1 < x2 {
+		xDir = 1
 	}
+	yDir := 0
 	if y1 > y2 {
-		tmp := y1
-		y1 = y2
-		y2 = tmp
+		yDir = -1
+	} else if y1 < y2 {
+		yDir = 1
 	}
-	// Keeping it simple for now
-	if x1 == x2 || y1 == y2 {
-		for x := x1; x <= x2; x++ {
-			for y := y1; y <= y2; y++ {
-				line = append(line, [2]int{x, y})
-			}
+	x := x1
+	y := y1
+	for {
+		line = append(line, [2]int{x, y})
+		if x == x2 && y == y2 {
+			return line
 		}
+		x += xDir
+		y += yDir
 	}
-	return line
 }
 
 func slurpDay5(path string) (*FloorMap, error) {
@@ -78,5 +82,6 @@ func day5() {
 	if err != nil {
 		panic(err)
 	}
+	// fmt.Println(floorMap.ventMap)
 	fmt.Println(floorMap.countDanger())
 }
