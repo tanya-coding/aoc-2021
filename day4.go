@@ -97,16 +97,16 @@ func drawFirstWins(numbers []int, boards []*Board) int {
 }
 
 func drawLastWins(numbers []int, boards []*Board) int {
-	wins := map[int]bool{}
+	winners := map[int]bool{}
 	var winningBoard Board
 	winningNum := 0
 	for _, num := range numbers {
-		for bi, board := range boards {
+		for idx, board := range boards {
 			// Skip previous winners
-			if !wins[bi] && mark(board, num) {
+			if !winners[idx] && mark(board, num) {
 				winningBoard = *board
 				winningNum = num
-				wins[bi] = true
+				winners[idx] = true
 			}
 		}
 	}
