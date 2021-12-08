@@ -13,27 +13,11 @@ func min(a, b int) int {
 	return b
 }
 
-func minOf(vars ...int) int {
-	minVal := vars[0]
-	for _, v := range vars {
-		minVal = min(minVal, v)
-	}
-	return minVal
-}
-
 func max(a, b int) int {
 	if a > b {
 		return a
 	}
 	return b
-}
-
-func maxOf(vars ...int) int {
-	maxVal := vars[0]
-	for _, v := range vars {
-		maxVal = max(maxVal, v)
-	}
-	return maxVal
 }
 
 func minMaxOf(vars ...int) (int, int) {
