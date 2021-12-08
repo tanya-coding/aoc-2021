@@ -25,6 +25,22 @@ func max(a, b int) int {
 func align(crabs []int, pos int) int {
 	fuel := 0
 	for _, c := range crabs {
+		fuel += max(c, pos) - min(c, pos)
+	}
+	return fuel
+}
+
+func bestPosition(crabs []int) (int, int) {
+	sort.Ints(crabs)
+	pos := crabs[len(crabs)/2] // median
+	fuel := align(crabs, pos)
+	return pos, fuel
+}
+
+// Aligns crabs at given position and calculates fuel spent
+func align2(crabs []int, pos int) int {
+	fuel := 0
+	for _, c := range crabs {
 		distance := max(c, pos) - min(c, pos)
 		// Using formula https://www.cuemath.com/sum-of-natural-numbers-formula/
 		fuel += distance * (distance + 1) / 2
@@ -32,23 +48,15 @@ func align(crabs []int, pos int) int {
 	return fuel
 }
 
-func bestPosition(crabs []int) (int, int) {
-	sort.Ints(crabs)
-	minPos := crabs[0]
-	maxPos := crabs[len(crabs)-1]
-	best := minPos
-	fuel := align(crabs, minPos)
-	for i := minPos + 1; i <= maxPos; i++ {
-		f := align(crabs, i)
-		if f <= fuel {
-			fuel = f
-			best = i
-		} else {
-			// We found the minimum, return
-			return best, fuel
-		}
+func bestPosition2(crabs []int) (int, int) {
+	sum := 0
+	for _, c := range crabs {
+		sum += c
 	}
-	return best, fuel
+	pos := sum / len(crabs) // mean
+	fuel := align2(crabs, pos)
+
+	return pos, fuel
 }
 
 func slurpDay7(path string) ([]int, error) {
@@ -71,4 +79,5 @@ func day7() {
 		panic(err)
 	}
 	fmt.Println(bestPosition(crabs))
+	fmt.Println(bestPosition2(crabs))
 }
