@@ -30,18 +30,30 @@ func minMaxOf(vars ...int) (int, int) {
 	return minVal, maxVal
 }
 
+// 1: 1
+// 2: 1 + 2 = 3
+// 3: 1 + 2 + 3 = 6 9 - 3
+// 4: 1 + 2 + 3 + 4 = 10 16 - 6
+// 5: 1 + 2 + 3 + 4 + 5 = 15 25 - 10
+// 6: 1 + 2 + 3 + 4 + 5 + 6 = 21 36 - 15
+// 7: 28 = 49 - 21
+// 8: 37 = 64 - 28
+// n*n - (n-1)*2
+
 // Aligns crabs at given position and calculates fuel spent
 func align(crabs []int, pos int) int {
 	fuel := 0
 	for _, c := range crabs {
-		fuel += max(c, pos) - min(c, pos)
+		distance := max(c, pos) - min(c, pos)
+		for j := 1; j <= distance; j++ {
+			fuel += j
+		}
 	}
 	return fuel
 }
 
 func bestPosition(crabs []int) (int, int) {
 	minPos, maxPos := minMaxOf(crabs...)
-	fmt.Println(minPos, maxPos)
 	best := minPos
 	fuel := align(crabs, minPos)
 	for i := minPos + 1; i <= maxPos; i++ {
