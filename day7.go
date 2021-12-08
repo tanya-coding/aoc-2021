@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"sort"
 	"strconv"
 	"strings"
 )
@@ -20,16 +21,6 @@ func max(a, b int) int {
 	return b
 }
 
-func minMaxOf(vars ...int) (int, int) {
-	minVal := vars[0]
-	maxVal := vars[0]
-	for _, v := range vars {
-		minVal = min(minVal, v)
-		maxVal = max(maxVal, v)
-	}
-	return minVal, maxVal
-}
-
 // Aligns crabs at given position and calculates fuel spent
 func align(crabs []int, pos int) int {
 	fuel := 0
@@ -42,7 +33,9 @@ func align(crabs []int, pos int) int {
 }
 
 func bestPosition(crabs []int) (int, int) {
-	minPos, maxPos := minMaxOf(crabs...)
+	sort.Ints(crabs)
+	minPos := crabs[0]
+	maxPos := crabs[len(crabs)-1]
 	best := minPos
 	fuel := align(crabs, minPos)
 	for i := minPos + 1; i <= maxPos; i++ {
@@ -50,6 +43,9 @@ func bestPosition(crabs []int) (int, int) {
 		if f <= fuel {
 			fuel = f
 			best = i
+		} else {
+			// We found the minimum, return
+			return best, fuel
 		}
 	}
 	return best, fuel
@@ -70,7 +66,7 @@ func slurpDay7(path string) ([]int, error) {
 
 func day7() {
 	fmt.Println("\nDay 7 *******************")
-	crabs, err := slurpDay6("input/day7.txt")
+	crabs, err := slurpDay7("input/day7.txt")
 	if err != nil {
 		panic(err)
 	}
