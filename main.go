@@ -17,6 +17,7 @@ func main() {
 	// day2()
 	// day3()
 	// withTime(day4)
-	///withTime(day5)
-	withTime(day6)
+	// withTime(day5)
+	// withTime(day6)
+	withTime(day7)
 }
