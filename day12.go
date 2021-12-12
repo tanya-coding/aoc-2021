@@ -39,12 +39,10 @@ func canVisit2(caveMap map[string]Cave, path Path, next Cave) bool {
 	// so we don't need to recalculate it each time
 	smallCnt := map[string]int{}
 	limitReached := false
-	for _, cn := range path {
-		c := caveMap[cn]
-		if !c.large {
-			curr := smallCnt[cn]
-			smallCnt[cn] = curr + 1
-			if smallCnt[cn] > 1 {
+	for _, c := range path {
+		if !caveMap[c].large {
+			smallCnt[c] = smallCnt[c] + 1
+			if smallCnt[c] > 1 {
 				limitReached = true
 			}
 		}
