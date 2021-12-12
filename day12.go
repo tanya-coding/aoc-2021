@@ -26,44 +26,41 @@ type Cave struct {
 	neighbors []*Cave
 }
 
-func canVisit(path []*Cave, next Cave) bool {
+func canVisit(path []string, next Cave) bool {
 	// TODO: Add loop detection
 	if next.large {
 		return true
 	}
 	// Check if we just came from this node
-	if len(path) > 0 && path[len(path)-1].name == next.name {
-		return false
-	}
+	// if len(path) > 0 && path[len(path)-1] == next.name {
+	// 	return false
+	// }
 	// Check if small cave has been visited already
 	for _, c := range path {
-		if c.name == next.name {
+		if c == next.name {
 			return false
 		}
 	}
 	return true
 }
 
-type Path []*Cave
+type Path []string
 
-func findPath(caveMap map[string]*Cave, currLoc string, end string, currentPath Path, allPaths *[]Path) {
+func findPaths(caveMap map[string]*Cave, currLoc string, end string, currentPath Path, allPaths *[]Path) {
 	curr := caveMap[currLoc]
-	fmt.Println("Path:", caveNames(currentPath), "Current: ", curr.name)
+	path := make(Path, len(currentPath))
+	copy(path, currentPath)
 	for _, next := range curr.neighbors {
-		if curr.name == "start" {
-			fmt.Println("START PATH:", caveNames(currentPath))
-		}
-		fmt.Println("Checking next", next.name, canVisit(currentPath, *next))
 		switch {
 		case next.name == end:
 			// Found end, add it to current path and add to all paths
-			path := append(currentPath, next)
+			path := append(path, next.name)
+			// fmt.Println("FOUND PATH", currentCopy, "Current path", currentPath, "Paths so far", len(*allPaths))
 			*allPaths = append(*allPaths, path)
-			fmt.Println("FOUND PATH", caveNames(path), "Paths so far", len(*allPaths))
 		case canVisit(currentPath, *next):
 			// Can visit neighbor, add it to current path and keep walkling/recur
-			path := append(currentPath, next)
-			findPath(caveMap, next.name, end, path, allPaths)
+			path := append(path, next.name)
+			findPaths(caveMap, next.name, end, path, allPaths)
 		}
 	}
 }
@@ -96,14 +93,6 @@ func slurpDay12(path string) (map[string]*Cave, error) {
 	return caves, nil
 }
 
-func caveNames(caves []*Cave) []string {
-	names := make([]string, len(caves))
-	for i, c := range caves {
-		names[i] = c.name
-	}
-	return names
-}
-
 func prnMap(caveMap map[string]*Cave) {
 	for n, c := range caveMap {
 		names := make([]string, len(c.neighbors))
@@ -116,16 +105,15 @@ func prnMap(caveMap map[string]*Cave) {
 
 func day12() {
 	fmt.Println("\nDay 12 *******************")
-	caveMap, err := slurpDay12("input/day12small.txt")
+	caveMap, err := slurpDay12("input/day12.txt")
 	if err != nil {
 		panic(err)
 	}
 	prnMap(caveMap)
-	allPath := []Path{}
-	start := caveMap["start"]
-	findPath(caveMap, "start", "end", Path{start}, &allPath)
-	for _, p := range allPath {
-		fmt.Println(caveNames(p))
+	allPaths := []Path{}
+	findPaths(caveMap, "start", "end", Path{"start"}, &allPaths)
+	for _, p := range allPaths {
+		fmt.Println(p)
 	}
-	//fmt.Println(allPaths(caveMap, "start", "end"))
+	fmt.Println("Found paths:", len(allPaths))
 }
