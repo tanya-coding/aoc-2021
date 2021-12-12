@@ -9,11 +9,11 @@ import (
 type Cave struct {
 	name      string
 	large     bool
-	neighbors []*Cave
+	neighbors []Cave
 }
 
 // Visitor rules - part 1
-func canVisit(caveMap map[string]*Cave, path Path, next Cave) bool {
+func canVisit(caveMap map[string]Cave, path Path, next Cave) bool {
 	if next.large {
 		return true
 	}
@@ -27,7 +27,7 @@ func canVisit(caveMap map[string]*Cave, path Path, next Cave) bool {
 }
 
 // Visitor rules - part 2
-func canVisit2(caveMap map[string]*Cave, path Path, next Cave) bool {
+func canVisit2(caveMap map[string]Cave, path Path, next Cave) bool {
 	if next.large {
 		return true
 	}
@@ -54,9 +54,9 @@ func canVisit2(caveMap map[string]*Cave, path Path, next Cave) bool {
 
 type Path []string
 
-type CanVisitFunc func(caveMap map[string]*Cave, path Path, next Cave) bool
+type CanVisitFunc func(caveMap map[string]Cave, path Path, next Cave) bool
 
-func findPaths(canVisit CanVisitFunc, caveMap map[string]*Cave, currLoc string, end string, currentPath Path, allPaths []Path) []Path {
+func findPaths(canVisit CanVisitFunc, caveMap map[string]Cave, currLoc string, end string, currentPath Path, allPaths []Path) []Path {
 	curr := caveMap[currLoc]
 	for _, next := range curr.neighbors {
 		switch {
@@ -64,7 +64,7 @@ func findPaths(canVisit CanVisitFunc, caveMap map[string]*Cave, currLoc string, 
 			// Found end, add new path
 			path := append(currentPath, end)
 			allPaths = append(allPaths, path)
-		case canVisit(caveMap, currentPath, *next):
+		case canVisit(caveMap, currentPath, next):
 			// Can visit neighbor, add it to current path and keep walkling/recur
 			path := append(currentPath, next.name)
 			allPaths = findPaths(canVisit, caveMap, next.name, end, path, allPaths)
@@ -73,20 +73,20 @@ func findPaths(canVisit CanVisitFunc, caveMap map[string]*Cave, currLoc string, 
 	return allPaths
 }
 
-func findOrNew(caveMap map[string]*Cave, name string) *Cave {
+func findOrNew(caveMap map[string]Cave, name string) Cave {
 	if c, ok := caveMap[name]; ok {
 		return c
 	} else {
-		return &Cave{name: name, large: unicode.IsUpper(rune(name[0])), neighbors: []*Cave{}}
+		return Cave{name: name, large: unicode.IsUpper(rune(name[0])), neighbors: []Cave{}}
 	}
 }
 
-func slurpDay12(path string) (map[string]*Cave, error) {
+func slurpDay12(path string) (map[string]Cave, error) {
 	input, err := slurp(path)
 	if err != nil {
 		return nil, err
 	}
-	caves := map[string]*Cave{}
+	caves := map[string]Cave{}
 	for _, conn := range input {
 		strs := strings.Split(conn, "-")
 		n1 := strs[0]
@@ -101,7 +101,7 @@ func slurpDay12(path string) (map[string]*Cave, error) {
 	return caves, nil
 }
 
-func prnMap(caveMap map[string]*Cave) {
+func prnMap(caveMap map[string]Cave) {
 	for n, c := range caveMap {
 		names := make([]string, len(c.neighbors))
 		for i, c := range c.neighbors {
