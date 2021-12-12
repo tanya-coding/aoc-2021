@@ -6,26 +6,13 @@ import (
 	"unicode"
 )
 
-// start
-// end
-// node
-//  large: true/false
-//  neighbors (bi-directional)
-
-// something to uniquely identify path, or collect path and check before going in if next item can be visited given a path so far
-// need to detect deadends
-
-// data structure:
-//   collecting path: creating new collections as we branch
-//   check if given path so far and the next item, item can be walked
-//     if it can be add it to path and walk all its neighbours (except the node you just came from).
-
 type Cave struct {
 	name      string
 	large     bool
 	neighbors []*Cave
 }
 
+// Visitor rules - part 1
 func canVisit(caveMap map[string]*Cave, path Path, next Cave) bool {
 	if next.large {
 		return true
@@ -39,6 +26,7 @@ func canVisit(caveMap map[string]*Cave, path Path, next Cave) bool {
 	return true
 }
 
+// Visitor rules - part 2
 func canVisit2(caveMap map[string]*Cave, path Path, next Cave) bool {
 	if next.large {
 		return true
@@ -50,21 +38,18 @@ func canVisit2(caveMap map[string]*Cave, path Path, next Cave) bool {
 	// We could change Path type to collect these stats
 	// so we don't need to recalculate it each time
 	smallCnt := map[string]int{}
-	limit := false
+	limitReached := false
 	for _, cn := range path {
 		c := caveMap[cn]
 		if !c.large {
 			curr := smallCnt[cn]
 			smallCnt[cn] = curr + 1
 			if smallCnt[cn] > 1 {
-				limit = true
+				limitReached = true
 			}
 		}
 	}
-	if smallCnt[next.name] < 1 || (smallCnt[next.name] == 1 && !limit) {
-		return true
-	}
-	return false
+	return smallCnt[next.name] < 1 || smallCnt[next.name] == 1 && !limitReached
 }
 
 type Path []string
