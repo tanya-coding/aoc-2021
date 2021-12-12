@@ -87,8 +87,8 @@ func slurpDay12(path string) (map[string]Cave, error) {
 		return nil, err
 	}
 	caves := map[string]Cave{}
-	for _, conn := range input {
-		strs := strings.Split(conn, "-")
+	for _, edge := range input {
+		strs := strings.Split(edge, "-")
 		n1 := strs[0]
 		n2 := strs[1]
 		c1 := findOrNew(caves, n1)
