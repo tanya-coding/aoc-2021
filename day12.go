@@ -61,7 +61,7 @@ func findPaths(canVisit CanVisitFunc, caveMap map[string]*Cave, currLoc string, 
 	for _, next := range curr.neighbors {
 		switch {
 		case next.name == end:
-			// Found end, count new path
+			// Found end, add new path
 			path := append(currentPath, end)
 			allPaths = append(allPaths, path)
 		case canVisit(caveMap, currentPath, *next):
