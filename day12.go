@@ -118,15 +118,10 @@ func day12() {
 	prnMap(caveMap)
 	allPaths := 0
 	findPaths(canVisit, caveMap, "start", "end", Path{"start"}, &allPaths)
-	// for _, p := range allPaths {
-	// 	fmt.Println(p)
-	// }
 	fmt.Println("Found paths:", allPaths)
+
 	allPaths2 := 0
 	findPaths(canVisit2, caveMap, "start", "end", Path{"start"}, &allPaths2)
-	// for _, p := range allPaths2 {
-	// 	fmt.Println(p)
-	// }
 	fmt.Println("Found paths:", allPaths2)
 
 }
