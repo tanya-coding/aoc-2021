@@ -26,15 +26,10 @@ type Cave struct {
 	neighbors []*Cave
 }
 
-func canVisit(path []string, next Cave) bool {
-	// TODO: Add loop detection
+func canVisit(caveMap map[string]*Cave, path Path, next Cave) bool {
 	if next.large {
 		return true
 	}
-	// Check if we just came from this node
-	// if len(path) > 0 && path[len(path)-1] == next.name {
-	// 	return false
-	// }
 	// Check if small cave has been visited already
 	for _, c := range path {
 		if c == next.name {
@@ -44,23 +39,52 @@ func canVisit(path []string, next Cave) bool {
 	return true
 }
 
+func canVisit2(caveMap map[string]*Cave, path Path, next Cave) bool {
+	if next.large {
+		return true
+	}
+	if next.name == "start" || next.name == "end" {
+		return false
+	}
+	// Check if small cave has been visited already
+	// We could change Path type to collect these stats
+	// so we don't need to recalculate it each time
+	smallCnt := map[string]int{}
+	limit := false
+	for _, cn := range path {
+		c := caveMap[cn]
+		if !c.large {
+			curr := smallCnt[cn]
+			smallCnt[cn] = curr + 1
+			if smallCnt[cn] > 1 {
+				limit = true
+			}
+		}
+	}
+	if smallCnt[next.name] < 1 || (smallCnt[next.name] == 1 && !limit) {
+		return true
+	}
+	return false
+}
+
 type Path []string
 
-func findPaths(caveMap map[string]*Cave, currLoc string, end string, currentPath Path, allPaths *[]Path) {
+type CanVisitFunc func(caveMap map[string]*Cave, path Path, next Cave) bool
+
+func findPaths(canVisit CanVisitFunc, caveMap map[string]*Cave, currLoc string, end string, currentPath Path, allPaths *[]Path) {
 	curr := caveMap[currLoc]
 	path := make(Path, len(currentPath))
-	copy(path, currentPath)
+	copy(path, currentPath) // Capture current path before branching
 	for _, next := range curr.neighbors {
 		switch {
 		case next.name == end:
 			// Found end, add it to current path and add to all paths
 			path := append(path, next.name)
-			// fmt.Println("FOUND PATH", currentCopy, "Current path", currentPath, "Paths so far", len(*allPaths))
 			*allPaths = append(*allPaths, path)
-		case canVisit(currentPath, *next):
+		case canVisit(caveMap, currentPath, *next):
 			// Can visit neighbor, add it to current path and keep walkling/recur
 			path := append(path, next.name)
-			findPaths(caveMap, next.name, end, path, allPaths)
+			findPaths(canVisit, caveMap, next.name, end, path, allPaths)
 		}
 	}
 }
@@ -111,9 +135,16 @@ func day12() {
 	}
 	prnMap(caveMap)
 	allPaths := []Path{}
-	findPaths(caveMap, "start", "end", Path{"start"}, &allPaths)
-	for _, p := range allPaths {
-		fmt.Println(p)
-	}
+	findPaths(canVisit, caveMap, "start", "end", Path{"start"}, &allPaths)
+	// for _, p := range allPaths {
+	// 	fmt.Println(p)
+	// }
 	fmt.Println("Found paths:", len(allPaths))
+	allPaths2 := []Path{}
+	findPaths(canVisit2, caveMap, "start", "end", Path{"start"}, &allPaths2)
+	// for _, p := range allPaths2 {
+	// 	fmt.Println(p)
+	// }
+	fmt.Println("Found paths:", len(allPaths2))
+
 }
